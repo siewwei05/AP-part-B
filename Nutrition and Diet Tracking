@@ -1,125 +1,45 @@
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ViewerList;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class NutritionTrackerApp extends Application {
 
-    private ViewerList<FoodItem> foodItems = FXCollections.viewerArrayList();
-    private Label totalCaloriesLabel;
+    // List to store food items (as strings)
+    private ObservableList<String> foodList = FXCollections.observableArrayList();
+    private int totalCalories = 0; // Variable to track total calories
+    private Label totalCaloriesLabel; // Label to show total calories
 
     public static void main(String[] args) {
-        launch(args);
+        launch(args); // Start the application
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Nutrition & Diet Tracker");
+    public void start(Stage stage) {
+        // Set up the window
+        stage.setTitle(" Nutrition and DietTracker");
 
-        // Layout
-        VBox mainLayout = new VBox(10);
-        mainLayout.setPadding(new Insets(10));
+        // Create text fields for user input
+        TextField foodInput = new TextField();
+        foodInput.setPromptText("Enter food name");
 
-        // Input fields
-        TextField foodField = new TextField();
-        foodField.setPromptText("Enter food name");
+        TextField calorieInput = new TextField();
+        calorieInput.setPromptText("Enter calories");
 
-        TextField calorieField = new TextField();
-        calorieField.setPromptText("Enter calories");
-
+        // Button to add food to the list
         Button addButton = new Button("Add Food");
 
-        HBox inputLayout = new HBox(10, foodNameField, calorieField, addButton);
-        inputLayout.setPadding(new Insets(10));
-
-        // TableView to display food items
-        TableView<FoodItem> tableView = new TableView<>(foodItems);
-
-        TableColumn<FoodItem, String> nameColumn = new TableColumn<>("Food Name");
-        nameColumn.setCellValueFactory(data -> data.getValue().foodNameProperty());
-
-        TableColumn<FoodItem, Integer> calorieColumn = new TableColumn<>("Calories");
-        calorieColumn.setCellValueFactory(data -> data.getValue().caloriesProperty().asObject());
-
-        tableView.getColumns().addAll(nameColumn, calorieColumn);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        // Total calories label
+        // Label to display total calories
         totalCaloriesLabel = new Label("Total Calories: 0");
 
-        mainLayout.getChildren().addAll(inputLayout, tableView, totalCaloriesLabel);
+        // ListView to display the food items
+        ListView<String> foodListView = new ListView<>(foodList);
 
-        // Button action
-        addButton.setOnAction(e -> {
-            String foodName = foodNameField.getText();
-            String calorieText = calorieField.getText();
-
-            if (foodName.isEmpty() || calorieText.isEmpty()) {
-                showAlert("Error", "Both fields must be filled in.");
-                return;
-            }
-
-            try {
-                int calories = Integer.parseInt(calorieText);
-                FoodItem item = new FoodItem(foodName, calories);
-                foodItems.add(item);
-                updateTotalCalories();
-                foodNameField.clear();
-                calorieField.clear();
-            } catch (NumberFormatException ex) {
-                showAlert("Error", "Calories must be a number.");
-            }
-        });
-
-        Scene scene = new Scene(mainLayout, 400, 400);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    private void updateTotalCalories() {
-        int totalCalories = foodItems.stream().mapToInt(FoodItem::getCalories).sum();
-        totalCaloriesLabel.setText("Total Calories: " + totalCalories);
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    public static class FoodItem {
-        private final SimpleStringProperty foodName;
-        private final SimpleIntegerProperty calories;
-
-        public FoodItem(String foodName, int calories) {
-            this.foodName = new SimpleStringProperty(foodName);
-            this.calories = new SimpleIntegerProperty(calories);
-        }
-
-        public String getFoodName() {
-            return foodName.get();
-        }
-
-        public SimpleStringProperty foodNameProperty() {
-            return foodName;
-        }
-
-        public int getCalories() {
-            return calories.get();
-        }
-
-        public SimpleIntegerProperty caloriesProperty() {
-            return calories;
-        }
-    }
-}
-
+       
 
 
 
