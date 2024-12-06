@@ -1,3 +1,43 @@
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class NutritionTrackerApp extends Application {
+
+  
+    private ObservableList<String> food = FXCollections.observableArrayList();
+    private int totalCalories = 0; // Variable to track total calories
+    private Label totalCaloriesL; // Label to show total calories
+
+    public static void main(String[] args) {
+        launch(args); 
+    }
+
+    @Override
+    public void start(Stage stage) {
+        
+        stage.setTitle("Simple Nutrition and Diet Tracker");
+
+        // Create text fields for user input
+        TextField food = new TextField();
+        food.setPromptText("Enter food name");
+
+        TextField calories = new TextField();
+        calories.setPromptText("Enter calories");
+
+        // Button to add food to the list
+        Button addButton = new Button("Add Food");
+
+        // Label to display total calories
+        totalCaloriesLabel = new Label("Total Calories: 0");
+
+        // ListView to display the food items
+        ListView<String> foodListView = new ListView<>(foodList);
 
 
 
